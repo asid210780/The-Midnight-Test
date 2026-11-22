@@ -1,0 +1,303 @@
+
+
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<title>The Midnight Test | BPS</title>
+
+<style>
+
+*{box-sizing:border-box}
+
+body{margin:0;padding:22px 12px;background:#11182e;
+
+font-family:Georgia,serif;color:#292b3d}
+
+main{max-width:700px;margin:auto;background:#fbf8f1;
+
+border-radius:20px;overflow:hidden}
+
+header{background:#11182e;color:white;text-align:center;
+
+padding:35px 20px;border-bottom:3px solid #d7bd87}
+
+.eyebrow{color:#d7bd87;letter-spacing:3px;font:11px Arial}
+
+h1{font-size:38px;font-weight:normal;margin:15px 0}
+
+header p{color:#e3dfeb}
+
+section{padding:25px}
+
+h2{font-weight:normal;color:#202945}
+
+p{line-height:1.6}
+
+.note{background:#eeebf4;padding:15px;border-left:3px solid #d7bd87;
+
+border-radius:8px;line-height:1.6}
+
+button{background:#202945;color:white;border:1px solid #d7bd87;
+
+border-radius:30px;padding:14px 24px;cursor:pointer;font-size:15px}
+
+button:disabled{opacity:.4}
+
+.scale{display:flex;gap:6px;margin:18px 0}
+
+.scale span{flex:1;text-align:center;background:#e8e5ef;
+
+padding:10px 2px;border-radius:7px;font:12px Arial}
+
+.q{padding:17px 0;border-top:1px solid #e4e0d8}
+
+.q p{font-size:16px}
+
+.options{display:grid;grid-template-columns:repeat(5,1fr);gap:5px}
+
+.opt{border:1px solid #ddd8e6;border-radius:8px;padding:9px 2px;
+
+text-align:center;font:11px Arial;cursor:pointer}
+
+.opt:has(input:checked){background:#e5e0ef;border-color:#756b96}
+
+.opt input{display:block;margin:0 auto 7px;accent-color:#343d63}
+
+.actions{text-align:center;padding:15px}
+
+#result{display:none;background:#eeebf4;border-radius:15px;
+
+padding:20px;text-align:center;margin-top:20px}
+
+.score{font-size:42px;color:#202945}
+
+.bar{height:12px;background:#d5d1df;border-radius:20px;overflow:hidden}
+
+#fill{height:100%;background:#b49b70;width:0}
+
+.small{font:12px/1.5 Arial;color:#666779}
+
+footer{text-align:center;color:#ddd8eb;padding:20px;font:11px Arial}
+
+@media(max-width:420px){.opt{font-size:9px}}
+
+</style>
+
+</head>
+
+<body>
+
+<main>
+
+<header>
+
+<div class="eyebrow">A PRIVATE SELF-ASSESSMENT</div>
+
+<h1>The Midnight Test</h1>
+
+<p>Bedtime Procrastination Scale (BPS)</p>
+
+</header>
+
+<section id="intro">
+
+<h2>What is bedtime procrastination?</h2>
+
+<p>Bedtime procrastination refers to going to bed later than intended, despite having no external reason preventing you from doing so.</p>
+
+<div class="note">
+
+<strong>Understanding your BPS score</strong><br>
+
+The Bedtime Procrastination Scale contains nine statements. Each response is scored from 1 to 5. Your final score is the average of your nine corrected responses.
+
+<br><br>
+
+<strong>Range: 1–5</strong><br>
+
+1 = Lower score<br>
+
+5 = Higher score<br><br>
+
+A higher score indicates a greater tendency to postpone bedtime. There are no universally established clinical cut-offs for low, moderate or high severity. This is a self-report measure, not a diagnosis.
+
+</div>
+
+<div class="scale">
+
+<span>1<br>Lowest</span><span>2</span><span>3<br>Middle</span><span>4</span><span>5<br>Highest</span>
+
+</div>
+
+<p class="small">Your answers are calculated in your browser. They are not submitted to or stored by this website.</p>
+
+<div class="actions">
+
+<button onclick="document.getElementById('intro').style.display='none';document.getElementById('test').style.display='block'">Begin assessment</button>
+
+</div>
+
+</section>
+
+<section id="test" style="display:none">
+
+<h2>Your questionnaire</h2>
+
+<p class="small">Choose one response for each statement. Think about your usual behaviour.</p>
+
+<form id="form">
+
+<div id="questions"></div>
+
+<div class="actions">
+
+<button id="submit" type="submit" disabled>Calculate my score</button>
+
+</div>
+
+</form>
+
+<div id="result">
+
+<div class="eyebrow">YOUR BPS AVERAGE</div>
+
+<div class="score" id="score"></div>
+
+<div class="bar"><div id="fill"></div></div>
+
+<p id="interpretation"></p>
+
+<p class="small">This score reflects your responses. It is not a clinical diagnosis or a validated severity category.</p>
+
+<button onclick="location.reload()">Retake assessment</button>
+
+</div>
+
+</section>
+
+</main>
+
+<footer>THE MIDNIGHT DILEMMA · Sleep matters. So does personal time.</footer>
+
+<script>
+
+const items=[
+
+["I go to bed later than I had intended.",false],
+
+["I go to bed early if I have to get up early in the morning.",true],
+
+["If it is time to turn off the lights at night, I do it immediately.",true],
+
+["Often I am still doing other things when it is time to go to bed.",false],
+
+["I easily get distracted by things when I actually would like to go to bed.",false],
+
+["I do not go to bed on time.",false],
+
+["I have a regular bedtime which I keep to.",true],
+
+["I want to go to bed on time but I just don't.",false],
+
+["I can easily stop with my activities when it is time to go to bed.",true]
+
+];
+
+const choices=["Almost never","Rarely","Sometimes","Often","Almost always"];
+
+const container=document.getElementById("questions");
+
+items.forEach((item,i)=>{
+
+const q=document.createElement("div");
+
+q.className="q";
+
+const p=document.createElement("p");
+
+p.innerHTML="<strong>"+(i+1)+".</strong> "+item[0];
+
+q.appendChild(p);
+
+const options=document.createElement("div");
+
+options.className="options";
+
+choices.forEach((choice,j)=>{
+
+const label=document.createElement("label");
+
+label.className="opt";
+
+const radio=document.createElement("input");
+
+radio.type="radio";
+
+radio.name="q"+i;
+
+radio.value=j+1;
+
+radio.addEventListener("change",check);
+
+label.appendChild(radio);
+
+label.appendChild(document.createTextNode(choice));
+
+options.appendChild(label);
+
+});
+
+q.appendChild(options);
+
+container.appendChild(q);
+
+});
+
+function check(){
+
+document.getElementById("submit").disabled=
+
+!items.every((_,i)=>document.querySelector('input[name="q'+i+'"]:checked'));
+
+}
+
+document.getElementById("form").addEventListener("submit",function(e){
+
+e.preventDefault();
+
+const values=items.map((item,i)=>{
+
+const v=Number(document.querySelector('input[name="q'+i+'"]:checked').value);
+
+return item[1]?6-v:v;
+
+});
+
+const average=values.reduce((a,b)=>a+b,0)/9;
+
+document.getElementById("score").textContent=average.toFixed(2)+" / 5";
+
+document.getElementById("fill").style.width=((average-1)/4*100)+"%";
+
+document.getElementById("interpretation").textContent=
+
+"Your average BPS score is "+average.toFixed(2)+". Higher scores indicate a greater tendency to postpone bedtime. No clinical severity category can be assigned from this score.";
+
+document.getElementById("result").style.display="block";
+
+document.getElementById("result").scrollIntoView({behavior:"smooth"});
+
+});
+
+</script>
+
+</body>
+
+</html>
